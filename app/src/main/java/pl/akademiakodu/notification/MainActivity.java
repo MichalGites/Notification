@@ -1,6 +1,7 @@
 package pl.akademiakodu.notification;
 
 import android.app.Notification;
+import android.app.Notification.InboxStyle;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -13,13 +14,15 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
+    // dojść czemu InBoxStyle nie działa!
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
     }
-    
+
     // od wersji JLB? można dodawać rzyciski do notyfikacji ale rzadko się tego używa w praktyce
 
     @OnClick(R.id.button)
@@ -33,14 +36,14 @@ public class MainActivity extends AppCompatActivity {
         // korzystamy z InBoxStyle aby móc zbudować notyfikcaję składającą się z killku linijek
         // ustawiamy ten styl w Builderze później - metoda setStyle
         // pamiętać o zgodności klas Notification lub NotificationCompat bo sie nie skompiluje inaczej
-        NotificationCompat.InboxStyle inBoxStyle = new NotificationCompat.InboxStyle();
+        Notification.InboxStyle inBoxStyle = new Notification.InboxStyle();
         inBoxStyle.setBigContentTitle("Lekcje: ");
         inBoxStyle.addLine(" - SharedPreferences");
         inBoxStyle.addLine(" - Animacje");
         inBoxStyle.addLine(" - WebView");
 
         // korzystamy z buildera wiec mozemy dodawac po kropce
-        Notification noty = new NotificationCompat.Builder(this)
+        Notification noty = new Notification.Builder(this)
                 .setContentTitle("Nowa wiadomość")
                 .setContentText("Przyszła do Ciebie nowa wiadomość")
                 .setTicker("Nowa wiadomość ...")
@@ -52,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 // ustawienie stylu inBox
                 .setStyle(inBoxStyle)
+                // ustawiamy priorytet notyfikacji na max zeby wyswietlila sie jako pierwsza jesli jest ich duzo
+                .setPriority(Notification.PRIORITY_MAX)
                 .build();
         // NotificationCompat z biblioteki supprtowej wspiera kompatybiność wsteczną aplikacji - stare wersje androida
         // mamy przygotowana notyfikacje ale musimy ja jeszcze opublikowac poprzez notification managera
